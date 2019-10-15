@@ -60,4 +60,18 @@ public class Product {
     public String toString() {
     	return "description=" + description;
     }
+
+    //compare product.code to compare if two instances are 
+	@Override
+	public boolean equals(Object obj) {
+		// TODO Auto-generated method stub
+		if(obj instanceof Product ) {
+			Product  p2 = (Product) obj;
+			if(code.equalsIgnoreCase(p2.getCode())) {
+				return true;
+			}
+			
+		}
+		return false;
+	}
 }
