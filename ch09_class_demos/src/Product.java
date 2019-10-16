@@ -1,6 +1,6 @@
 import java.text.NumberFormat;
 
-public class Product {
+public class Product implements Cloneable {
 
     private String code;
     private String description;
