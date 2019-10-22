@@ -32,7 +32,7 @@ public class ProductApp {
 			//retrieve the product that matches the code entered
 		Product pdt = null;
 		for (Product p: products) {
-			if (p.getCode().equalsIgnoreCase(code));
+			if (p.getCode().equalsIgnoreCase(code))
 			//that's my product
 			pdt = p;
 		}
