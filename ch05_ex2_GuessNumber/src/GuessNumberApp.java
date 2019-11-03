@@ -29,7 +29,7 @@ public class GuessNumberApp {
             System.out.print("Your guess: ");
             int guess = sc.nextInt();
             //move the guess variable outside the try/catch to be used outside the try/catch
-           int guess = 0;
+           //int guess = 0;
             
 //            try  {
 //            	  guess = sc.nextInt();	

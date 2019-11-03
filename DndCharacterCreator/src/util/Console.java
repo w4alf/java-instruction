@@ -27,7 +27,6 @@ public class Console {
 
     public static String getEmail(String prompt) {
         
-    	
     	String s =null;
         boolean isValid = false;
         
