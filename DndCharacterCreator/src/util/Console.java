@@ -9,11 +9,13 @@ public class Console {
         
     	String s =null;
         boolean isValid = false;
+        
+        
         while (!isValid) {
         	 
         	System.out.print(prompt);
         	 s = sc.nextLine();
-        	 if (s!=null && s.contentEquals("") ) {
+        	 if (s.isEmpty() || s==null) {
         		 System.out.println("Error! You must input something. Try again.");
         	 }
         	 else {
@@ -89,21 +91,32 @@ public class Console {
      }
     
     
-    
+    //dnd version
     public static int getInt(String prompt) {
-        int i = 0;
-        boolean isValid = false;
-        while (!isValid) {
-            System.out.print(prompt);
-            if (sc.hasNextInt()) {
-                i = sc.nextInt();
-                isValid = true;
-            } else {
-                System.out.println("Error! Invalid integer. Try again.");
-            }
-            sc.nextLine();  // discard any other data entered on the line
-        }
-        return i;
+    	 String s= null;
+     	int i = 0;
+         boolean isValid = false;
+         while (!isValid) {
+             System.out.print(prompt);
+             if (sc.hasNextInt()) {
+                 i = sc.nextInt();
+                 if (String.valueOf(i).contentEquals("")) {
+                 	System.out.println("Error! Invalid entry. Try again.");
+                 }else {
+                 	isValid = true;
+                 	
+                 	
+                 }
+                 
+                 
+             } else {
+                 System.out.println("Error! Invalid integer. Try again.");
+             }
+             sc.nextLine();  // discard any other data entered on the line
+         }
+         return i;
+        
+        
     }
 
     public static int getInt(String prompt, int min, int max) {

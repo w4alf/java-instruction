@@ -3,15 +3,20 @@ package ui;
 
 
 import java.util.List;
+import java.io.*;
+import java.nio.file.*;
 
 import business.DndCharacter;
+
 import db.DndDB;
 import util.Console;
 
 
 public class DndCharCreatorApp {
 		
-	static DndDB characterDb = new DndDB();
+	private static DndDB characterDb = new DndDB();
+	
+
 	
 	public static void main(String[] args) {
 		
@@ -19,19 +24,24 @@ public class DndCharCreatorApp {
 
 		
 		
-		
-		int command = 0;
+		String command = "";
 		
 		DndCharacter c = new DndCharacter(); 
 		
 		
-		while (command !=99) {
+		while (!command.equals("99")) {
 			
-			command = Console.getInt(getMenu(),0, 100);
+
+			
+			command = Console.getString(getMenu());
+			command.toLowerCase();
+		
 			
 			switch (command) {
+				
+
 			
-				case 1:
+				case "1":
 					//list all characters
 					List<DndCharacter> allCharacters = characterDb.getAll();
 					
@@ -44,13 +54,13 @@ public class DndCharCreatorApp {
 					System.out.println();
 					break;
 	
-				case 2:
+				case "2":
 					//get a character
 					int id = Console.getInt("Enter Character Id: ");
 					c = getCharacter(id);
 					break;
 					
-				case 3:
+				case "3":
 					//create a character
 					
 					
@@ -120,60 +130,88 @@ public class DndCharCreatorApp {
 					// Dnd "Class" is set after rules "requisites" of abilities are determined
 					//based on your roles you qualify to select from the following classes
 					String resultString="";
-					
-					if (wisdom >= 13) {
-						resultString = "Cleric ";
-					}
-					
-					if (strength >= 13) {
-						resultString += "Fighter Dwarf ";
-					}
-					
-					if (intelligence >= 13) {
-						resultString += "Magic-User ";
-					}	
-					if (dexterity >= 13) {
-						resultString += "Thief ";
-					}
-					if (intelligence >= 13 && strength >= 13) {
-						resultString += "Elf ";
-					} 
-					if (strength >= 13 && dexterity >= 13) {
-						resultString += "Halfling ";
+					String[] verifyClass = new String[6];
+					for(int i=0; i<6; i++) {
+						verifyClass[i]="";
 					}
 
 					
-					resultString.replace(" ", " |");
-					resultString = "| "+ resultString;
+					
+					if (wisdom >= 13) {
+						resultString = "Cleric, ";
+						verifyClass[0] = "cleric";
+					}
+					
+					if (strength >= 13) {
+						resultString += "Fighter, Dwarf, ";
+						verifyClass[1] = "fighter";
+						verifyClass[2] = "dwarf";
+					}
+					
+					if (intelligence >= 13) {
+						resultString += "Magic-User, ";
+						verifyClass[3] = "magic-user";
+					}	
+					if (dexterity >= 13) {
+						resultString += "Thief, ";
+						verifyClass[4] = "thief";
+					}
+					if (intelligence >= 13 && strength >= 13) {
+						resultString += "Elf, ";
+						verifyClass[5] = "elf";
+					} 
+					if (strength >= 13 && dexterity >= 13) {
+						resultString += "Halfling, ";
+						verifyClass[6] = "halfling";
+					}
+
+					
+		
+					resultString = resultString.substring(0, (resultString.length()-2));
+				
+					
 					System.out.println("Based on your ability scores you qualify for the following classes:");
 					System.out.println(resultString);
-					
+				
 					isTrue = false;
-	
+					boolean isValidClass = false;
 					
 					//While loop sets Class selected
-					 
 					
 					while (!isTrue){
 						dndClass = Console.getString("Enter your Class Selection: ");
-						dndClass.toLowerCase();
+						dndClass = dndClass.toLowerCase();
 						
-						switch (dndClass) {
-						case "elf":
-						case "halfling":
-						case "dwarf":
-						case "magic-user":
-						case "fighter":
-						case "thief":
-						case "cleric":
-							isTrue = true;
-							break;
+						for (int i=0;i<6;i++) {
+							if(verifyClass[i].equalsIgnoreCase(dndClass)) {
+								isValidClass = true;
+							}
+						}
+						
+						
+						if (isValidClass) {
 							
-						default:
-							System.out.println("Invalid Class. Please try again.");
-							System.out.println();
-							break;
+					
+							switch (dndClass) {
+							case "elf":
+							case "halfling":
+							case "dwarf":
+							case "magic-user":
+							case "fighter":
+							case "thief":
+							case "cleric":
+								isTrue = true;
+								break;
+								
+							default:
+								System.out.println("Invalid Class. Please try again.");
+								System.out.println();
+								break;
 							
+							}
+							
+						} else {
+							System.out.println("You must pick one of the Class options provided");
 						}
 					}
 					
@@ -182,7 +220,7 @@ public class DndCharCreatorApp {
 					//gold pieces calc is 3d6x10
 					goldPieces = diceRoll(3,6)*10;
 					System.out.println();
-					System.out.println("You have " + goldPieces + " gold pieces.");
+					System.out.println("Based on a dice roll, your calculated gold pieces are: " + goldPieces + " gold pieces.");
 					System.out.println();
 					
 		
@@ -203,7 +241,7 @@ public class DndCharCreatorApp {
 						tempGP = goldPieces;
 						
 						armor = Console.getString("Choose one of the above Armor types [GP deducted from your GP total]: ");
-						armor.toLowerCase();
+						armor = armor.toLowerCase();
 						
 						//switch for deducting Gold Pieces from total and setting AC aka Armor Class
 						switch (armor) {
@@ -279,12 +317,14 @@ public class DndCharCreatorApp {
 			
 						}
 						
-						if (armorClass >= 3) {
+						if (hitPoints >= 3) {
 							isTrue = true;
 						}
 						
 					}
-										
+					
+					System.out.println();
+					System.out.println("Based on a dice roll, your calculated Hit Points are: " + hitPoints);
 							
 					c = new DndCharacter(name,dndClass,level,strength,intelligence,wisdom,dexterity,constitution,charisma,goldPieces,expPoints,armorClass,armor,hitPoints);
 					
@@ -304,7 +344,7 @@ public class DndCharCreatorApp {
 					
 					break;
 					
-				case 4:
+				case "4":
 
 					//edit
 					int idEdit = Console.getInt("Enter Character Id to edit: ");
@@ -334,16 +374,87 @@ public class DndCharCreatorApp {
 					}
 					break;
 					
-				case 5:
+				case "5":
 					//delete a character
-					System.out.println("place delete a character logic here");
+					
+					int idDelete = Console.getInt("Enter the Character Id to delete: ");
+					DndCharacter cDelete = getCharacter(idDelete);
+			
+					 rowCount = characterDb.delete(cDelete);
+					
+					if (rowCount == 0) {
+						System.out.println("Error. The Character was not deleted.");
+					} else {
+						System.out.println("Success. The Character was deleted successfully.");
+						System.out.println();
+					}
+							
 					break;
-				case 6:
-					//save a character to text file
-					System.out.println("place save a character to text file logic here");
+					
+				case "6":
+					//write a character to text file aka DND Character Sheet
+		
+					
+					// get a character by id first
+					id = Console.getInt("Enter Character Id: ");
+					
+					// "c" will return a DndCharacter class
+					c = getCharacter(id);
+					
+					
+					
+					
+					
+					//create file if one doesn't exist
+					
+					String fileString = c.getName()+ "_lvl"+ c.getLevel() + ".txt";  
+					
+					String dirString= "c:/repos/java-instruction/DndCharacterCreator/files";
+					
+			
+					
+					Path filePath = Paths.get(dirString,fileString);
+					
+				
+					if (Files.notExists(filePath)) {
+						try {
+							Files.createFile(filePath);
+						} catch (IOException e) {
+							
+							e.printStackTrace();
+						}
+					} 
+			
+					//this method will build the final output string with character values to the text file.
+					String writeString = buildCharSheet(c);
+							
+					
+					try (PrintWriter out = new PrintWriter(
+									  new BufferedWriter(
+									  new FileWriter(dirString +"/"+fileString)));) {
+						out.println(writeString);
+						out.close();
+						
+						System.out.println();
+						System.out.println("Creation of file was successful.");
+						System.out.println("Full path to the character file is: "+ dirString +"/"+fileString);
+						System.out.println();
+						
+					} catch (IOException e) {
+						
+						System.err.println(e);
+					}
+					
 					break;
-				case 99:
+		
+					
+				case "99":
+					byeBye();
+					break;
+					
+				case "exit":	
 					//exit
+					command ="99";
 					byeBye();
 					break;
 					
@@ -361,6 +472,9 @@ public class DndCharCreatorApp {
 	}// main method end
 
 	
+
+
+
 	private static int diceRoll(int nbrOfDice, int nbrOfSides) {
 		
 		int diceTotal =0;
@@ -374,13 +488,16 @@ public class DndCharCreatorApp {
 	
 	
 	private static String getMenu() {
-		String menu = "MAIN MENU:\n" +
+		String menu = "\n" +
+					  "**********************************\n"+
+					  "*           MAIN MENU:           *\n" +
+					  "**********************************\n"+
 					  "1 -   List all Characters \n" +
 					  "2 -   Get a Character \n" +
 					  "3 -   Create a Character \n" +
 					  "4 -   Edit a Character \n" +
 					  "5 -   Delete a Character\n" +
-					  "6 -   Save a Character to text file\n" +
+					  "6 -   Write a Character to text file\n" +
 					  "99 - Exit App\n" +
 					  "Command: ";
 		return menu;
@@ -419,5 +536,70 @@ public class DndCharCreatorApp {
 		System.out.println();
 		
 	}	
+	
+	private static String buildCharSheet(DndCharacter c) {
+		String writeString="";
+		
+
+		
+		
+		
+
+				 writeString = "+-------------------DND BASIC CHARACTER SHEET -------------------+\n"+ 
+						 	   "Name:  " + c.getName() + "\n" +
+						 	   "Class: " + c.getDndClass() + "\n" +
+						 	   "Level: " + c.getLevel() + "\n" +
+						 	   "XP:    " + c.getExpPoints() + "\n" +
+						 	   "GP:    " + c.getGoldPieces() + " gold pieces\n\n" +
+						 	   "ABILITIES:" + "\n" +
+						 	   "+----------------------------------------------------------------+ \n" +
+				 			   "| STRENGTH                  [ " + c.getStrength() + " ]\n" +
+				 			   "| INTELLIGENCE              [ " + c.getIntelligence() + " ]\n" +
+				 			   "| WISDOM                    [ " + c.getWisdom() + " ]\n" +
+				 			   "| DEXTERITY                 [ " + c.getDexterity() + " ]\n" +
+				 			   "| CONSTITUTION              [ " + c.getConstitution() + " ]\n" +
+				 			   "| CHARISMA                  [ " + c.getCharisma() + " ]\n" +
+				 			   "+----------------------------------------------------------------+ \n" + 
+				 			   "+----------------------------------------------------------------+ \n" +  
+				 			   "| ARMOR                      [ " + c.getArmor() + " ]\n" +
+				 			   "| ARMOR CLASS   AC:          [ " + c.getArmorClass() + " ]\n" +
+				 			   "| HIT POINTS    HP:          [ " + c.getHitPoints() + " ]\n" +
+				 			   "+----------------------------------------------------------------+ \n" + 
+
+							   "+--WEAPONS-------------------------------------------------------+ \n" +
+							   "|                                                                | \n" +
+							   "|                                                                | \n" +
+							   "|                                                                | \n" +
+							   "|                                                                | \n" +
+							   "|                                                                | \n" +
+							   "|                                                                | \n" +
+							   "+----------------------------------------------------------------+ \n" + 
+							   "+--SPELLS AND POTIONS -------------------------------------------+ \n" +
+							   "|                                                                | \n" +
+							   "|                                                                | \n" +
+							   "|                                                                | \n" +
+							   "|                                                                | \n" +
+							   "|                                                                | \n" +
+							   "|                                                                | \n" +
+							   "+----------------------------------------------------------------+ \n" + 
+							   "+--EQUIPMENT-----------------------------------------------------+ \n" +
+							   "|                                                                | \n" +
+							   "|                                                                | \n" +
+							   "|                                                                | \n" +
+							   "|                                                                | \n" +
+							   "|                                                                | \n" +
+							   "|                                                                | \n" +
+							   "+----------------------------------------------------------------+ \n" + 
+							   "+--NOTES---------------------------------------------------------+ \n" +
+							   "|                                                                | \n" +
+							   "|                                                                | \n" +
+							   "|                                                                | \n" +
+							   "|                                                                | \n" +
+							   "|                                                                | \n" +
+							   "|                                                                | \n" +
+							   "+----------------------------------------------------------------+ \n" ; 
+		
+		return writeString;
+	}
 	
 } // DndCreatorApp end

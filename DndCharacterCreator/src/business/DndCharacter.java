@@ -2,21 +2,21 @@ package business;
 
 public class DndCharacter {
 
-	int id;
-	String name;
-	String dndClass;
-	int level;
-	int strength;
-	int intelligence;
-	int wisdom;
-	int dexterity;
-	int constitution;
-	int charisma;
-	int goldPieces;
-	int expPoints;
-	int armorClass;
-	String armor;
-	int hitPoints;
+	private int id;
+	private String name;
+	private String dndClass;
+	private int level;
+	private int strength;
+	private int intelligence;
+	private int wisdom;
+	private int dexterity;
+	private int constitution;
+	private int charisma;
+	private int goldPieces;
+	private int expPoints;
+	private int armorClass;
+	private String armor;
+	private int hitPoints;
 
 	public DndCharacter() {
 		super();

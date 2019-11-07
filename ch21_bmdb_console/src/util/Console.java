@@ -91,13 +91,22 @@ public class Console {
     
     
     public static int getInt(String prompt) {
-        int i = 0;
+        String s= null;
+    	int i = 0;
         boolean isValid = false;
         while (!isValid) {
             System.out.print(prompt);
             if (sc.hasNextInt()) {
                 i = sc.nextInt();
-                isValid = true;
+                if ("".equals(String.valueOf(i))||String.valueOf(i).isEmpty()) {
+                	System.out.println("Error! Invalid entry. Try again.");
+                }else {
+                	isValid = true;
+                	//dnd
+                	
+                }
+                
+                
             } else {
                 System.out.println("Error! Invalid integer. Try again.");
             }
