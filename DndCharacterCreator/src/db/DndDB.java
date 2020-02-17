@@ -12,7 +12,7 @@ import java.util.List;
 import business.DndCharacter;
 
 
-
+//Dungeons and Dragons character sheet
 public class DndDB {
 
 	
