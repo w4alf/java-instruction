@@ -1,4 +1,4 @@
-//pirate 
+// pirate 
 package business;
 
 public class Pirate {
