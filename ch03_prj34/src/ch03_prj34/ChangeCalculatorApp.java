@@ -8,7 +8,7 @@ import java.util.Scanner;
 public class ChangeCalculatorApp {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		//  TODO Auto-generated method stub
 
 		   // welcome the user to the program
         System.out.println("Welcome to the Change Calculator");
