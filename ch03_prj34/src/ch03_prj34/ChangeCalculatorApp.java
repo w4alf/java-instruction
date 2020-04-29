@@ -1,3 +1,6 @@
+
+// calculates change based on console input
+
 package ch03_prj34;
 
 import java.math.BigDecimal;
